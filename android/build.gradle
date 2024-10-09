@@ -5,14 +5,17 @@ allprojects {
     }
 }
 
-rootProject.buildDir = "../build"
+rootProject.buildDir = "../build"  // Custom build directory path
+
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(":app")
+    project.buildDir = "${rootProject.buildDir}/${project.name}"  // Assigning custom build dir for subprojects
 }
 
+subprojects {
+    project.evaluationDependsOn(":app")  // Ensuring all subprojects depend on the app module
+}
+
+// Task to clean the build directory
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
