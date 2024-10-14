@@ -5,7 +5,10 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Welcome'),
+        title: Text('Welcome',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -31,31 +34,31 @@ class WelcomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              'What financial topic would you like to explore?',
+              'What do you want to do with Jollof?',
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
             FinancialTopicTile(
-              icon: Icons.account_balance,
-              title: 'Budgeting Basics',
-              subtitle: 'Learn to create and stick to a budget',
+              icon: Icons.list_alt_outlined,
+              title: 'Build my porfolio',
+              subtitle: 'Let Ai trade for you while you sleep',
               onTap: () {
                 // Navigate to budgeting screen
               },
             ),
             FinancialTopicTile(
               icon: Icons.savings,
-              title: 'Saving Strategies',
-              subtitle: 'Discover effective ways to save money',
+              title: 'Invest in mutual fund',
+              subtitle: 'Earn upto 55% fixed return',
               onTap: () {
                 // Navigate to saving screen
               },
             ),
             FinancialTopicTile(
-              icon: Icons.school,
-              title: 'Investing 101',
-              subtitle: 'Understand the basics of safe investing',
+              icon: Icons.wallet,
+              title: 'Fund my wallet',
+              subtitle: 'Add some money into you wallet',
               onTap: () {
                 // Navigate to investing screen
               },
