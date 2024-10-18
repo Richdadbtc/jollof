@@ -114,11 +114,11 @@ class _ProofOfIdentityScreenState extends State<ProofOfIdentityScreen> {
               'Please provide any of the required documents for verification. Make sure you have good lighting.',
               style: TextStyle(color: Colors.black),
             ),
-            const SizedBox(height: 30),
+            SizedBox(height: 30),
             _buildDocumentButton('Drivers Licence'),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             _buildDocumentButton('Passport'),
-            const SizedBox(height: 210),
+            SizedBox(height: 210),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

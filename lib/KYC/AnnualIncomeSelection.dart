@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
-import 'ProofOfIdentityScreen.dart';
+import 'package:jollof/KYC/terms_and_conditions_screen.dart';
 
-class DateOfBirthScreen extends StatefulWidget {
-  const DateOfBirthScreen({Key? key}) : super(key: key);
+class AnnualIncomeScreen extends StatefulWidget {
+  const AnnualIncomeScreen({Key? key}) : super(key: key);
 
   @override
-  _DateOfBirthScreenState createState() => _DateOfBirthScreenState();
+  _AnnualIncomeScreenState createState() => _AnnualIncomeScreenState();
 }
 
-class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
-  DateTime? _selectedDate;
-  double progress = 0.88;
+class _AnnualIncomeScreenState extends State<AnnualIncomeScreen> {
+  String? _selectedIncome;
+  final List<String> _incomeRanges = [
+    '\$0 - \$10,000',
+    '\$10,000 - \$50,000',
+    '\$50,000 - \$100,000',
+    '\$100,000 - \$500,000',
+    '\$500,000 and above',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +26,7 @@ class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(
-          'Date of birth',
+        title: const Text('Proof of identity',
           style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
@@ -73,12 +78,12 @@ class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
                     alignment: Alignment.center,
                     children: [
                       CustomPaint(
-                        size: Size(40, 40),
-                        painter: CircleProgressPainter(progress: progress, percentage: 88, color: Colors.amber),
+                        size: const Size(40, 40),
+                        painter: CircleProgressPainter(progress: 1.0, percentage: 100, color: Colors.amber),
                       ),
-                      Text(
-                        '${(progress * 100).toInt()}%',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      const Text(
+                        '100%',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -87,43 +92,29 @@ class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
             ),
             const SizedBox(height: 20),
             const Text(
-              'Date of birth',
+              'Annual income',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            Text(
-              'You must be at least 18 years old, and date must match your government issued ID or passport',
+            const Text(
+              'Can include salary, alimony, social security, investment income etc.',
               style: TextStyle(color: Colors.black),
             ),
-            const SizedBox(height: 30),
-            GestureDetector(
-              onTap: () => _selectDate(context),
-              child: AbsorbPointer(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: _selectedDate == null
-                        ? 'Select Date of Birth'
-                        : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    suffixIcon: Icon(Icons.calendar_today),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 430),
+            const SizedBox(height: 20),
+            ..._incomeRanges.map((range) => _buildIncomeOption(range)),
+            const SizedBox(height: 130),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                child: Text('Next'),
-                onPressed: _isDateValid() ? () {
+                child: const Text('Continue'),
+                onPressed: _selectedIncome != null ? () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProofOfIdentityScreen()),
+                    MaterialPageRoute(builder: (context) => TermsAndConditionsScreen()),
                   );
+                  // Navigate to the next screen or finish the flow
+                  print('Selected income: $_selectedIncome');
+                  // Add navigation logic here
                 } : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,
@@ -137,37 +128,33 @@ class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Handle chat action
+        },
+        child: const Icon(Icons.chat),
+        backgroundColor: Colors.amber,
+      ),
     );
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now().subtract(Duration(days: 365 * 18)),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
+  Widget _buildIncomeOption(String range) {
+    return RadioListTile<String>(
+      title: Text(range),
+      value: range,
+      groupValue: _selectedIncome,
+      onChanged: (String? value) {
+        setState(() {
+          _selectedIncome = value;
+        });
+      },
+      activeColor: Colors.amber,
+      contentPadding: EdgeInsets.zero,
     );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
-
-  bool _isDateValid() {
-    if (_selectedDate == null) return false;
-    final now = DateTime.now();
-    final age = now.year - _selectedDate!.year;
-    if (age > 18) return true;
-    if (age < 18) return false;
-    // If they're exactly 18, we need to check the month and day
-    if (now.month < _selectedDate!.month) return false;
-    if (now.month > _selectedDate!.month) return true;
-    return now.day >= _selectedDate!.day;
   }
 }
 
-// Reuse CircleProgressPainter or ensure it is available here.
+// CircleProgressPainter class (same as in your original code)
 class CircleProgressPainter extends CustomPainter {
   final double progress;
   final double percentage;

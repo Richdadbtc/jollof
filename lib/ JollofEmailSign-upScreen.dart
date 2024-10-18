@@ -1,4 +1,6 @@
+import 'dart:convert'; // For encoding JSON
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'JollofEmailVerificationScreen.dart';
 
@@ -11,11 +13,63 @@ class EmailSignUpScreen extends StatefulWidget {
 
 class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
   final _emailController = TextEditingController();
+  bool _isLoading = false; // To show a loading indicator
+  String? _responseMessage; // To display any error or success messages
 
   @override
   void dispose() {
     _emailController.dispose();
     super.dispose();
+  }
+
+  // Function to handle Sign-Up Request
+  Future<void> signUpUser(String email) async {
+    setState(() {
+      _isLoading = true;
+      _responseMessage = null;
+    });
+
+    final url = Uri.parse('https://jollof.tatspace.com/api/v1/auth/sign-up');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+    final body = jsonEncode({
+      "email": email,
+      "deviceToken": "7t8y88trf"
+    });
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200|| response.statusCode==201) {
+        print(response.body);
+        // If sign-up is successful
+        setState(() {
+          _responseMessage = 'Sign-up successful. OTP sent to your email.';
+          // Navigate to EmailVerificationScreen with email
+
+        });
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => EmailVerificationScreen(email: email),
+          ),
+        );
+      } else {
+        print(response.statusCode);
+        setState(() {
+          _responseMessage = 'Sign-up failed. Error: ${response.body}';
+        });
+      }
+    } catch (error) {
+      setState(() {
+        _responseMessage = 'An error occurred: $error';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -54,26 +108,33 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
             const SizedBox(height: 32),
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Email address',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.black),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.amber)
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.amber)
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.amber)
+                )
               ),
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 24),
-            SizedBox(
+            _isLoading
+                ? Center(child: CircularProgressIndicator(color: Colors.amber,)) // Show loading indicator while requesting OTP
+                : SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   String email = _emailController.text.trim();
 
                   if (email.isNotEmpty && email.contains('@')) {
-                    // Navigate to EmailVerificationScreen with email
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => EmailVerificationScreen(email: email),
-                      ),
-                    );
+                    // Call the sign-up function when email is valid
+                    signUpUser(email);
                   } else {
                     // Show an error if email is invalid
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -92,6 +153,17 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                 child: const Text('Confirm Email'),
               ),
             ),
+            if (_responseMessage != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Center(
+                  child: Text(
+                    _responseMessage!,
+                    style: TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             const Spacer(),
             Center(
               child: TextButton(
@@ -132,5 +204,3 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
     );
   }
 }
-
-

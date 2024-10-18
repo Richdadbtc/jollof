@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:jollof/CreatePinScreen.dart';
 
-class JollofWelcomeScreen extends StatelessWidget {
+class JollofWelcomeScreen extends StatefulWidget {
   const JollofWelcomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _JollofWelcomeScreenState createState() => _JollofWelcomeScreenState();
+}
+
+class _JollofWelcomeScreenState extends State<JollofWelcomeScreen> {
+  // State to track the selected investment option
+  String _selectedOption = 'AI Managed Portfolio'; // Default option
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +20,9 @@ class JollofWelcomeScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Welcome', style: TextStyle(color: Colors.black)),
+        title: Text('Welcome',
+            style: TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18)),
         actions: [
           TextButton(
             onPressed: () {
@@ -40,28 +50,45 @@ class JollofWelcomeScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16, color: Colors.grey[600]),
               ),
               SizedBox(height: 32),
-              InvestmentOptionTile(
-                icon: '🌿',
-                title: 'Fixed investment',
-                subtitle: 'Up to 100% returns',
-                isSelected: false,
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedOption = 'Fixed investment'; // Set selected option
+                  });
+                },
+                child: InvestmentOptionTile(
+                  icon: '🌿',
+                  title: 'Fixed investment',
+                  subtitle: 'Up to 100% returns',
+                  isSelected: _selectedOption == 'Fixed investment',
+                ),
               ),
               SizedBox(height: 16),
-              InvestmentOptionTile(
-                icon: '🤖',
-                title: 'AI Managed Portfolio',
-                subtitle: 'Up to 300% returns',
-                isSelected: true,
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedOption = 'AI Managed Portfolio'; // Set selected option
+                  });
+                },
+                child: InvestmentOptionTile(
+                  icon: '🤖',
+                  title: 'AI Managed Portfolio',
+                  subtitle: 'Up to 300% returns',
+                  isSelected: _selectedOption == 'AI Managed Portfolio',
+                ),
               ),
               Spacer(),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreatePinScreen(),
-                    ),
+                    // Pass the selected investment option to the next screen
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreatePinScreen(),
+                      ),
                     );
-                    // TODO: Implement continue functionality
+                    // TODO: Implement continue functionality based on selected option
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.amber,
@@ -121,7 +148,7 @@ class InvestmentOptionTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
+        border: Border.all(color: isSelected ? Colors.amber : Colors.grey[300]!),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(

@@ -4,9 +4,11 @@ import 'package:jollof/Homepage/ChoosePlanScreen.dart';
 import 'package:jollof/QuestionnaireScreen.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'dart:math';
+import '../KYC/LocationSelectionScreen.dart';
 import 'HelpScreen.dart';
 import 'InvestScreen.dart';
 import 'AIAdvisorScreen.dart';
+
 
 class MainApp extends StatefulWidget {
   @override
@@ -19,7 +21,7 @@ class _MainAppState extends State<MainApp> {
   static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     InvestScreen(),
-    Text('AI Advisor Screen'),
+    AIAdvisorScreen(),
     Text('Help Screen'),
   ];
 
@@ -131,7 +133,7 @@ class HomeScreen extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuestionnaireScreen(questionIndex: 0)),
+          MaterialPageRoute(builder: (context) => LocationSelectionScreen()),
         );
       },
       child: Container(

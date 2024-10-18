@@ -104,12 +104,12 @@ class _AddressScreen2State extends State<AddressScreen2> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                child: const Text('Next'),
+                child:  Text('Next'),
                 onPressed: _isFormValid()
                     ? () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const DateOfBirthScreen()),
+                    MaterialPageRoute(builder: (context) => DateOfBirthScreen()),
                   );
                 }
                     : null,
@@ -194,14 +194,3 @@ class CircleProgressPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
-class NextScreen extends StatelessWidget {
-  const NextScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Next Screen')),
-      body: const Center(child: Text('This is the next screen after address input')),
-    );
-  }
-}

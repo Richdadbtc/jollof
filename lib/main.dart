@@ -12,7 +12,8 @@ import 'KYC/LocationSelectionScreen.dart';
 import 'WelcomeScreen.dart';
 import 'Homepage/PaymentInProgressScreen.dart';
 import 'Homepage/InvestmentAmountScreen.dart';
-
+import 'Homepage/AIAdvisorScreen.dart';
+import 'package:jollof/JollofVerificationSuccessScreen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
-      home: LocationSelectionScreen(),
+      home: JollofSplashScreen(),
     );
   }
 }

@@ -116,13 +116,13 @@ class _AddressScreenState extends State<AddressScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                child: const Text('Next'),
+                child:  Text('Next'),
                 onPressed: _addressController.text.isNotEmpty
                     ? () {
                   // Navigate to the next screen
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const NextScreen()),
+                    MaterialPageRoute(builder: (context) =>  AddressScreen2()),
                   );
                 }
                     : null,

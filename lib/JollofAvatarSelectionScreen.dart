@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jollof/AllowNotificationScreen.dart';
+import 'package:jollof/Homepage/JollofHomeScreen.dart';
 
 class AvatarSelectionScreen extends StatefulWidget {
   const AvatarSelectionScreen({Key? key}) : super(key: key);
@@ -38,7 +39,7 @@ class _AvatarSelectionScreenState extends State<AvatarSelectionScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Set your avatar', style: TextStyle(color: Colors.black)),
+        title: Text('Set your avatar', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -100,7 +101,7 @@ class _AvatarSelectionScreenState extends State<AvatarSelectionScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AllowNotificationScreen(),
+                      builder: (context) => MainApp(),
                     ),
                   );
                 }

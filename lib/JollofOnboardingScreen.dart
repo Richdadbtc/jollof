@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'LoginScreen.dart';
 
 import ' JollofEmailSign-upScreen.dart';
+
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -66,12 +68,15 @@ class OnboardingScreen extends StatelessWidget {
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
                   // TODO: Implement login navigation
                 },
                 child: const Text(
                   'Already have an account? Log In',
                   style: TextStyle(
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
               ),

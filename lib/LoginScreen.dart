@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jollof/JollofWelcomeScreen.dart';
+import 'package:jollof/JollofOnboardingScreen.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -21,7 +23,7 @@ class LoginScreen extends StatelessWidget {
         child: ListView( // Wrap Column with ListView
           children: [
             Text(
-              'Welcome back Uche Chris 👋',
+              'Welcome 👋',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 32),
@@ -71,17 +73,21 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 // Handle registration
               },
-              child: Text("Don't have an account ? Register"),
+              child: Text("Don't have an account ? Register",
+              style: TextStyle(color: Colors.black),),
             ),
             SizedBox(height: 16),
             Text('OR', textAlign: TextAlign.center),
             SizedBox(height: 16),
             OutlinedButton.icon(
               onPressed: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => OnboardingScreen()));
                 // Handle Facebook sign in
               },
               icon: Image.asset('assets/facebook_logo.png', width: 24, height: 24),
-              label: Text('Sign in with Facebook'),
+              label: Text('Sign in with Facebook',
+              style: TextStyle(color: Colors.black),),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
@@ -95,7 +101,8 @@ class LoginScreen extends StatelessWidget {
                 // Handle Google sign in
               },
               icon: Image.asset('assets/google_logo.png', width: 24, height: 24),
-              label: Text('Sign in with Google'),
+              label: Text('Sign in with Google',
+              style: TextStyle(color: Colors.black),),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
@@ -112,6 +119,7 @@ class LoginScreen extends StatelessWidget {
           ],
         ),
       ),
+      backgroundColor: Colors.white,
     );
   }
 }

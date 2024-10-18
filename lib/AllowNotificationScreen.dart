@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:jollof/LoginScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import 'CreatePinScreen.dart';
+import 'JollofWelcomeScreen.dart';
 
 class AllowNotificationScreen extends StatelessWidget {
   const AllowNotificationScreen({Key? key}) : super(key: key);
@@ -17,7 +21,7 @@ class AllowNotificationScreen extends StatelessWidget {
         ),
         title: Text(
           'Allow Notification',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
         ),
       ),
       body: Padding(
@@ -76,8 +80,10 @@ class AllowNotificationScreen extends StatelessWidget {
               child: TextButton(
                 onPressed: () {
                   // Navigate to login screen when skipped
-                  Navigator.pushReplacementNamed(context, '/login');
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => LoginScreen()));
                 },
+
                 child: Text(
                   'Skip for now',
                   style: TextStyle(color: Colors.black),
