@@ -1,22 +1,22 @@
-import 'dart:convert'; // For encoding JSON
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:get/get.dart';
+import 'GetX/UserController.dart';
 import 'JollofVerificationSuccessScreen.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
-  final String email;
-
-  const EmailVerificationScreen({Key? key, required this.email}) : super(key: key);
+  const EmailVerificationScreen({Key? key, required String userController, required String email}) : super(key: key);
 
   @override
   _EmailVerificationScreenState createState() => _EmailVerificationScreenState();
 }
 
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
-  final List<TextEditingController> _controllers = List.generate(6, (_) => TextEditingController()); // Generate 6 controllers
-  bool _isLoading = false; // To show a loading indicator
-  String? _responseMessage; // To display error/success messages
+  final UserController userController = Get.find<UserController>();
+  final List<TextEditingController> _controllers = List.generate(6, (_) => TextEditingController());
+  bool _isLoading = false;
+  String? _responseMessage;
 
   @override
   void dispose() {
@@ -26,7 +26,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     super.dispose();
   }
 
-  // Function to verify OTP code
   Future<void> verifyOtpCode(String otp) async {
     setState(() {
       _isLoading = true;
@@ -39,25 +38,22 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       'Accept': 'application/json',
     };
     final body = jsonEncode({
-      "email": widget.email, // Passing the email
-      "code": otp,            // Passing the 6-digit OTP
+      "email": userController.email,
+      "code": otp,
     });
-
     try {
       final response = await http.post(url, headers: headers, body: body);
 
       if (response.statusCode == 201) {
-        // OTP verification successful
         setState(() {
           _responseMessage = 'Verification successful.';
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => EmailVerificationSuccessScreen(),
-            ),
-          );
         });
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => EmailVerificationSuccessScreen(),
+          ),
+        );
       } else {
-        // Handle error from API
         setState(() {
           _responseMessage = 'Verification failed. Error: ${response.body}';
         });
@@ -76,11 +72,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   void _verifyCode() {
     String code = _controllers.map((c) => c.text).join();
 
-    if (code.length == 6) { // Check if the entered code is 6 digits
-      // Call verifyOtpCode with the entered code
+    if (code.length == 6) {
       verifyOtpCode(code);
     } else {
-      // Show error if the code is incomplete
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a valid 6-digit code')),
       );
@@ -114,11 +108,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              Text(
-                'Enter the code we\'ve sent by mail to\n${widget.email}',
+              Obx(() => Text(
+                'Enter the code we\'ve sent by mail to\n${userController.email}',
                 textAlign: TextAlign.start,
                 style: const TextStyle(color: Colors.black),
-              ),
+              )),
               TextButton(
                 onPressed: () {
                   // TODO: Implement change email functionality
@@ -129,16 +123,16 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(
-                  6, // Generate 6 input fields
+                  6,
                       (index) => SizedBox(
                     width: 50,
                     child: Container(
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.amber.withOpacity(1), // Amber outline
-                            spreadRadius: 2, // Extending the shadow like an outline
-                            blurRadius: 0, // No blur to create a sharp outline
+                            color: Colors.amber.withOpacity(1),
+                            spreadRadius: 2,
+                            blurRadius: 0,
                           ),
                         ],
                       ),

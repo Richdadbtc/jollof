@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'JollofAvatarSelectionScreen.dart';
 
 class CreatePinScreen extends StatefulWidget {
-  const CreatePinScreen({Key? key}) : super(key: key);
+  const CreatePinScreen({Key? key, required String email}) : super(key: key);
 
   @override
   _CreatePinScreenState createState() => _CreatePinScreenState();

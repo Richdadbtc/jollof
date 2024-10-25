@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class ChoosePlanScreen extends StatelessWidget {
+class ChoosePlanScreen extends StatefulWidget {
+  @override
+  _ChoosePlanScreenState createState() => _ChoosePlanScreenState();
+}
+
+class _ChoosePlanScreenState extends State<ChoosePlanScreen> {
+  String? selectedPlan; // This will hold the selected plan (null if none)
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,11 +41,11 @@ class ChoosePlanScreen extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _buildPlanCard(),
-                SizedBox(width: 10), // Add spacing between cards
-                _buildPlanCard(),
-                SizedBox(width: 10), // Add spacing between cards
-                _buildPlanCard(),
+                _buildPlanCard('Standard Plan', '\$299.00', 'Standard plan details'),
+                SizedBox(width: 10),
+                _buildPlanCard('Premium Plan', '\$499.00', 'Premium plan details'),
+                SizedBox(width: 10),
+                _buildPlanCard('Exclusive Plan', '\$999.00', 'Exclusive plan details'),
               ],
             ),
           ),
@@ -64,17 +71,21 @@ class ChoosePlanScreen extends StatelessWidget {
           _buildBenefitItem(color: Colors.orange, percentage: 0.25, duration: '6 months'),
           _buildBenefitItem(color: Colors.red, percentage: 0.55, duration: '12 months'),
           _buildBenefitItem(
-            color: Colors.purple,
+            color: Colors.amber,
             percentage: 0.80,
             title: 'capital reimbursement',
             subtitle: '80% capital reimbursement for \$50 only',
           ),
           SizedBox(height: 20),
+
+          // Continue Button
           ElevatedButton(
-            child: Text('Start with \$299'),
-            onPressed: () {
-              // Handle start plan action
-            },
+            child: Text(selectedPlan != null ? 'Start with $selectedPlan' : 'Select a Plan to Continue'),
+            onPressed: selectedPlan != null
+                ? () {
+              // Handle continue action (e.g., navigate to the next screen)
+            }
+                : null, // Disable the button if no plan is selected
             style: ElevatedButton.styleFrom(
               minimumSize: Size(double.infinity, 50),
               backgroundColor: Colors.amber,
@@ -88,63 +99,75 @@ class ChoosePlanScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPlanCard() {
-    return Container(
-      width: 300, // Set a fixed width for the card
-      height: 250,
-      decoration: BoxDecoration(
-        color: Colors.amber,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: 10,
-            bottom: 10,
-            child: Text(
-              'Jollof',
-              style: TextStyle(
-                color: Colors.black.withOpacity(0.5),
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+  // Function to build a plan card
+  Widget _buildPlanCard(String planName, String price, String details) {
+    bool isSelected = selectedPlan == planName; // Check if this plan is selected
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedPlan = planName; // Update selected plan
+        });
+      },
+      child: Container(
+        width: 300,
+        height: 250,
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.greenAccent : Colors.amber, // Highlight if selected
+          borderRadius: BorderRadius.circular(15),
+          border: isSelected ? Border.all(color: Colors.green, width: 3) : null, // Add border if selected
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              right: 10,
+              bottom: 10,
+              child: Text(
+                'Jollof',
+                style: TextStyle(
+                  color: Colors.black.withOpacity(0.5),
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Standard plan',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    planName,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  '\$299.00',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
+                  SizedBox(height: 8),
+                  Text(
+                    price,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Spacer(),
-                Text(
-                  'Earn 10% profit for 3 months, 25% for 6 months or\n55% profit for 12 months. Trades only Bitcoin and\nEthereum',
-                  style: TextStyle(color: Colors.black, fontSize: 12),
-                ),
-              ],
+                  Spacer(),
+                  Text(
+                    details,
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
+  // Function to build a benefit item
   Widget _buildBenefitItem({
     required Color color,
     required double percentage,

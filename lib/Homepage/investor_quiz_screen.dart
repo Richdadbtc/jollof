@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:jollof/Homepage/AIAdvisorScreen.dart';
 import 'package:jollof/Homepage/JollofHomeScreen.dart';
 
-import 'package:flutter/material.dart';
-
 class InvestorQuizScreen extends StatelessWidget {
   const InvestorQuizScreen({Key? key}) : super(key: key);
 

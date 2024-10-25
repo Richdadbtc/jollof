@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jollof/ExplainerScreen.dart';
 
 class QuestionnaireScreen extends StatelessWidget {
   final int questionIndex;
@@ -8,12 +9,13 @@ class QuestionnaireScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Let us know you', style: TextStyle(color: Colors.black)),
+        title: Text('Let us know you', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         actions: [
           TextButton(
@@ -24,19 +26,40 @@ class QuestionnaireScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 20),
-          CircularProgressIndicator(
-            value: (questionIndex + 1) / 6,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
-          ),
-          Text('${questionIndex + 1}/6'),
-          SizedBox(height: 20),
-          Expanded(
-            child: getQuestionWidget(questionIndex, context),
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Progress bar and step count
+            Row(
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      value: (questionIndex + 1) / 6,  // Adjust this to your progress
+                      strokeWidth: 6,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+                      backgroundColor: Colors.grey[200],
+                    ),
+                    Text(
+                      '${((questionIndex + 1) / 6 * 100).round()}%',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 260),
+                Text('${questionIndex + 1}/6',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ],
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: getQuestionWidget(questionIndex, context),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -61,6 +84,7 @@ class QuestionnaireScreen extends StatelessWidget {
   }
 }
 
+// Below are your Question screens (no changes needed unless you want to style more)
 class QuestionOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -81,6 +105,7 @@ class QuestionOne extends StatelessWidget {
   }
 }
 
+// Define QuestionTwo class
 class QuestionTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -101,6 +126,7 @@ class QuestionTwo extends StatelessWidget {
   }
 }
 
+// Define QuestionThree class
 class QuestionThree extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -108,7 +134,7 @@ class QuestionThree extends StatelessWidget {
       question: 'What would be your reaction if your investment portfolio experienced a temporary decline?',
       options: [
         'I would stay invested and wait for the market to recover.',
-        'I might consider adjusting my portfolio slightly to minimise losses.',
+        'I might consider adjusting my portfolio slightly to minimize losses.',
         'I would be concerned and might consider a more conservative approach.',
       ],
       onNext: () {
@@ -121,6 +147,7 @@ class QuestionThree extends StatelessWidget {
   }
 }
 
+// Define QuestionFour class
 class QuestionFour extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -140,7 +167,6 @@ class QuestionFour extends StatelessWidget {
     );
   }
 }
-
 
 class QuestionFive extends StatelessWidget {
   @override
@@ -162,6 +188,7 @@ class QuestionFive extends StatelessWidget {
   }
 }
 
+// Define QuestionSix class
 class QuestionSix extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -173,18 +200,19 @@ class QuestionSix extends StatelessWidget {
         'I tend to avoid making hasty decisions and would stay the course.',
       ],
       onNext: () {
-        // Handle completion of questionnaire
-        // For example, navigate to a results screen:
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => ResultsScreen()),
-        // );
+        // Handle completion of the questionnaire
+        // For example, navigate to a results or summary screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ExplainerScreen()), // Replace with your final screen
+        );
       },
     );
   }
 }
 
-// ... [Rest of the code remains unchanged]
+
+
 
 class QuestionTemplate extends StatefulWidget {
   final String question;
@@ -214,7 +242,7 @@ class _QuestionTemplateState extends State<QuestionTemplate> {
         ),
         ...widget.options.asMap().entries.map((entry) {
           return RadioListTile<int>(
-            title: Text(entry.value),
+            title: Text(entry.value,),
             value: entry.key,
             groupValue: selectedOption,
             onChanged: (value) {

@@ -76,18 +76,26 @@ class _InvestmentAmountScreenState extends State<InvestmentAmountScreen> {
   }
 }
 
-class ChooseDurationScreen extends StatelessWidget {
+class ChooseDurationScreen extends StatefulWidget {
   final String amount;
 
   ChooseDurationScreen({required this.amount});
 
   @override
+  _ChooseDurationScreenState createState() => _ChooseDurationScreenState();
+}
+
+class _ChooseDurationScreenState extends State<ChooseDurationScreen> {
+  String? selectedDuration; // Track the selected duration
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Choose Duration',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      ),
+        title: Text(
+          'Choose Duration',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         actions: [
           TextButton(
             child: Text('Help', style: TextStyle(color: Colors.amber)),
@@ -101,77 +109,74 @@ class ChooseDurationScreen extends StatelessWidget {
           children: [
             Icon(Icons.lock_clock_outlined, size: 130, color: Colors.amber),
             SizedBox(height: 25),
-            Text('Choose Duration', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              'Choose Duration',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             SizedBox(height: 20),
-            Text('Please choose the duration you would like your investment to last',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18)
-              ),
+            Text(
+              'Please choose the duration you would like your investment to last',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 20),
 
             // Duration options
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10.0),
+            Expanded(
               child: Column(
                 children: [
-                  Container(
-                    color: Colors.grey.shade300, // Background color for the first ListTile
-                    child: ListTile(
-                      title: Text('3 months at 10%'),
-                      leading: Radio(
-                        value: true,
-                        groupValue: true,
-                        onChanged: (value) {},
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10), // Spacing between list tiles
-                  Container(
-                    color: Colors.grey.shade200, // Background color for the second ListTile
-                    child: ListTile(
-                      title: Text('6 months at 25%'),
-                      leading: Radio(
-                        value: false,
-                        groupValue: true,
-                        onChanged: (value) {},
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10), // Spacing between list tiles
-                  Container(
-                    color: Colors.grey.shade100, // Background color for the third ListTile
-                    child: ListTile(
-                      title: Text('12 months at 50%'),
-                      leading: Radio(
-                        value: false,
-                        groupValue: true,
-                        onChanged: (value) {},
-                      ),
-                    ),
-                  ),
+                  _buildDurationOption('3 months at 10%', '3 months'),
+                  SizedBox(height: 10),
+                  _buildDurationOption('6 months at 25%', '6 months'),
+                  SizedBox(height: 10),
+                  _buildDurationOption('12 months at 50%', '12 months'),
                 ],
               ),
             ),
-
 
             // Continue button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                backgroundColor: Colors.amber// Full-width button
+                backgroundColor: Colors.amber,
               ),
-              child: Text('Continue'),
-              onPressed: () {
+              child: Text('Continue',
+              style: TextStyle(color: Colors.black),),
+              onPressed: selectedDuration != null
+                  ? () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => InvestmentSummaryScreen(amount: amount)),
+                  MaterialPageRoute(
+                      builder: (context) => InvestmentSummaryScreen(amount: widget.amount)),
                 );
-              },
+              }
+                  : null, // Disable button if no duration is selected
             ),
             SizedBox(height: 40),
           ],
+        ),
+      ),
+    );
+  }
+
+  // Widget to build each duration option
+  Widget _buildDurationOption(String title, String value) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedDuration = value; // Update the selected duration
+        });
+      },
+      child: Container(
+        color: selectedDuration == value ? Colors.amber.shade100 : Colors.white, // Highlight selected item
+        child: ListTile(
+          title: Text(title),
+          trailing: selectedDuration == value
+              ? Icon(Icons.check, color: Colors.green) // Show green tick if selected
+              : null,
         ),
       ),
     );

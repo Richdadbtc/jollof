@@ -1,7 +1,8 @@
-import 'dart:convert'; // For encoding JSON
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:get/get.dart';
+import 'GetX/UserController.dart';
 import 'JollofEmailVerificationScreen.dart';
 
 class EmailSignUpScreen extends StatefulWidget {
@@ -12,9 +13,10 @@ class EmailSignUpScreen extends StatefulWidget {
 }
 
 class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
+  final UserController userController = Get.find<UserController>();
   final _emailController = TextEditingController();
-  bool _isLoading = false; // To show a loading indicator
-  String? _responseMessage; // To display any error or success messages
+  bool _isLoading = false;
+  String? _responseMessage;
 
   @override
   void dispose() {
@@ -22,7 +24,6 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
     super.dispose();
   }
 
-  // Function to handle Sign-Up Request
   Future<void> signUpUser(String email) async {
     setState(() {
       _isLoading = true;
@@ -42,17 +43,15 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
     try {
       final response = await http.post(url, headers: headers, body: body);
 
-      if (response.statusCode == 200|| response.statusCode==201) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.body);
-        // If sign-up is successful
+        await userController.setEmail(email);
         setState(() {
           _responseMessage = 'Sign-up successful. OTP sent to your email.';
-          // Navigate to EmailVerificationScreen with email
-
         });
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => EmailVerificationScreen(email: email),
+            builder: (context) => EmailVerificationScreen(email: '', userController: '',),
           ),
         );
       } else {
@@ -109,34 +108,31 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
-                labelText: 'Email address',
-                labelStyle: TextStyle(color: Colors.black),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber)
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber)
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.amber)
-                )
+                  labelText: 'Email address',
+                  labelStyle: TextStyle(color: Colors.black),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber)
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber)
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber)
+                  )
               ),
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 24),
             _isLoading
-                ? Center(child: CircularProgressIndicator(color: Colors.amber,)) // Show loading indicator while requesting OTP
+                ? Center(child: CircularProgressIndicator(color: Colors.amber,))
                 : SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   String email = _emailController.text.trim();
-
                   if (email.isNotEmpty && email.contains('@')) {
-                    // Call the sign-up function when email is valid
                     signUpUser(email);
                   } else {
-                    // Show an error if email is invalid
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Please enter a valid email address')),
                     );
@@ -168,7 +164,6 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
             Center(
               child: TextButton(
                 onPressed: () {
-                  // Navigate to login screen
                   print('Navigating to login screen');
                 },
                 child: const Text(

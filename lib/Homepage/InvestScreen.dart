@@ -8,7 +8,9 @@ class InvestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select how to pay'),
+        title: Text('Select how to pay',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CircleAvatar(
@@ -118,10 +120,13 @@ class _InvestmentAmountScreenState extends State<InvestmentAmountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Investment amount'),
+        title: Text(
+          'Investment amount',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
         actions: [
           TextButton(
-            child: Text('Help', style: TextStyle(color: Colors.yellow)),
+            child: Text('Help', style: TextStyle(color: Colors.amber)),
             onPressed: () {},
           ),
         ],
@@ -129,40 +134,72 @@ class _InvestmentAmountScreenState extends State<InvestmentAmountScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 20),
-            Text('Enter amount', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Center(
+              child: Text(
+                'Enter amount',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
             SizedBox(height: 20),
 
-            // TextField for entering amount
-            TextField(
-              controller: _amountController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              style: TextStyle(fontSize: 48),
-              decoration: InputDecoration(
-                prefixText: '\$',
-                border: InputBorder.none,
-                hintText: '0.00',
+            // Center the TextField
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    '\$',
+                    style: TextStyle(fontSize: 48, color: Colors.grey),
+                  ),
+                  SizedBox(
+                    width: 200, // Adjust width as needed
+                    child: TextField(
+                      controller: _amountController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      textAlign: TextAlign.left,  // Center-align the input text
+                      style: TextStyle(fontSize: 48, color: Colors.black, fontWeight: FontWeight.bold),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '0.00',
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
 
             SizedBox(height: 10),
-            Text('Balance: \$800.00', style: TextStyle(color: Colors.grey)),
+
+            // Center-align the balance text
+            Center(
+              child: Text(
+                'Balance: \$800.00',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
 
             Spacer(),
 
-            // Continue button
+            // Full-width Continue button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50), // Full-width button
+                minimumSize: Size(double.infinity, 50),
+                backgroundColor: Colors.amber,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)
+                )// Full-width button
               ),
-              child: Text('Continue'),
+              child: Text('Continue',
+              style: TextStyle(color: Colors.black),),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ChooseDurationScreen(amount: _amountController.text)),
+                  MaterialPageRoute(
+                    builder: (context) => ChooseDurationScreen(amount: _amountController.text),
+                  ),
                 );
               },
             ),
@@ -173,3 +210,8 @@ class _InvestmentAmountScreenState extends State<InvestmentAmountScreen> {
     );
   }
 }
+
+
+
+
+

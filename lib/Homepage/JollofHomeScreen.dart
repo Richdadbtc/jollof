@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:jollof/Homepage/ChoosePlanScreen.dart';
 import 'package:jollof/QuestionnaireScreen.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'dart:math';
 import '../KYC/LocationSelectionScreen.dart';
+import 'AddMoneyScreen.dart';
 import 'HelpScreen.dart';
 import 'InvestScreen.dart';
 import 'AIAdvisorScreen.dart';
+import 'NotificationScreen.dart';
 
 
 class MainApp extends StatefulWidget {
@@ -22,7 +25,7 @@ class _MainAppState extends State<MainApp> {
     HomeScreen(),
     InvestScreen(),
     AIAdvisorScreen(),
-    Text('Help Screen'),
+    HelpCenterWidget(),
   ];
 
   void _onItemTapped(int index) {
@@ -59,7 +62,7 @@ class _MainAppState extends State<MainApp> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber,
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.black,
         onTap: _onItemTapped,
       ),
     );
@@ -68,9 +71,12 @@ class _MainAppState extends State<MainApp> {
 
 
 class HomeScreen extends StatelessWidget {
+  BuildContext? get context => null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -84,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 _buildCardRow(),
                 SizedBox(height: 20),
-                _buildQuickActions(),
+                _buildQuickActions(context),
                 SizedBox(height: 20),
                 _buildPortfolioSection(),
                 SizedBox(height: 20),
@@ -109,7 +115,7 @@ class HomeScreen extends StatelessWidget {
           backgroundImage: AssetImage('assets/profile_pic.jpeg'),
         ),
         Text(
-          'Hello, Chris Uche',
+          'Hello',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -119,9 +125,26 @@ class HomeScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            FaIcon(FontAwesomeIcons.gift, size: 15),
-            SizedBox(width: 5,),
-            Icon(Icons.notifications_outlined, size: 20),
+            IconButton(
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(),
+              icon: FaIcon(FontAwesomeIcons.gift, size: 15),
+              onPressed: () {
+
+              },
+            ),
+            SizedBox(width: 5),
+            IconButton(
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(),
+              icon: Icon(Icons.notifications_outlined, size: 20),
+              onPressed: () {
+                Navigator.push(
+                  context!,
+                  MaterialPageRoute(builder: (context) => NotificationScreen()),
+                );
+              },
+            ),
           ],
         ),
       ],
@@ -200,15 +223,15 @@ class HomeScreen extends StatelessWidget {
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          _buildJollofCard(const Color(0xfffed606)),
+          _buildJollofCard(Colors.amber, '\$4,000.06'),
           SizedBox(width: 16),
-          _buildJollofCard(Colors.green),
+          _buildJollofCard(Colors.green, '₦2,000.55'),
         ],
       ),
     );
   }
 
-  Widget _buildJollofCard(Color cardColor) {
+  Widget _buildJollofCard(Color cardColor, String cardAmount) {
     return Container(
       width: 300,
       padding: EdgeInsets.all(20),
@@ -228,19 +251,20 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Cash balance', style: TextStyle(color: Colors.black54, fontFamily: 'Inter-SemiBold')),
+              Text('Cash balance', style: TextStyle(color: Colors.black, fontFamily: 'Inter-SemiBold')),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.black12,
-                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text('Card Details', style: TextStyle(color: Colors.black54, fontFamily: 'Inter-SemiBold')),
+                child: Text('Card Details', style: TextStyle(color: Colors.black, fontFamily: 'Inter-SemiBold')),
               ),
             ],
           ),
-          Text(
-            '\$4,000.06',
+          // Replace the hardcoded amount with cardAmount
+          Text (
+            cardAmount,
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -250,7 +274,7 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Manage', style: TextStyle(color: Colors.black54, fontFamily: 'Inter-SemiBold')),
+              Text('Manage', style: TextStyle(color: Colors.black, fontFamily: 'Inter-SemiBold')),
               Text(
                 'Jollof',
                 style: TextStyle(
@@ -266,34 +290,64 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickActions() {
+  Widget _buildQuickActions(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildQuickActionItem(Icons.add, 'Add money'),
-        _buildQuickActionItem(Icons.arrow_upward, 'Withdraw'),
-        _buildQuickActionItem(Icons.explore, 'Discover'),
-        _buildQuickActionItem(Icons.more_horiz, 'More'),
+        _buildQuickActionItem(
+          context,
+          Icons.add,
+          'Add money',
+          AddMoneyScreen(), // Replace with the screen you want to navigate to
+        ),
+        _buildQuickActionItem(
+          context,
+          Icons.arrow_upward,
+          'Withdraw',
+          Text("WithdrawScreen"), // Replace with the screen you want to navigate to
+        ),
+        _buildQuickActionItem(
+          context,
+          Icons.explore,
+          'Discover',
+          Text("DiscoverScreen"), // Replace with the screen you want to navigate to
+        ),
+        _buildQuickActionItem(
+          context,
+          Icons.more_horiz,
+          'More',
+          Text("MoreOptionsScreen"), // Replace with the screen you want to navigate to
+        ),
       ],
     );
   }
 
-  Widget _buildQuickActionItem(IconData icon, String label) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(12),
+  Widget _buildQuickActionItem(
+      BuildContext context, IconData icon, String label, Widget screen) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => screen),
+        );
+      },
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.amber[200],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, size: 24),
           ),
-          child: Icon(icon, size: 24),
-        ),
-        SizedBox(height: 8),
-        Text(label, style: TextStyle(fontSize: 12)),
-      ],
+          SizedBox(height: 8),
+          Text(label, style: TextStyle(fontSize: 12)),
+        ],
+      ),
     );
   }
+
 
   Widget _buildPortfolioSection() {
     return Column(

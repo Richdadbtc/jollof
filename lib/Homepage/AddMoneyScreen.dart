@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'PaymentMethodSelectionScreen.dart';
+
 class AddMoneyScreen extends StatefulWidget {
   @override
   _AddMoneyScreenState createState() => _AddMoneyScreenState();
@@ -8,7 +10,7 @@ class AddMoneyScreen extends StatefulWidget {
 
 class _AddMoneyScreenState extends State<AddMoneyScreen> {
   String selectedCurrency = 'USDT';
-  TextEditingController _amountController = TextEditingController(text: '0.00');
+  TextEditingController _amountController = TextEditingController();
 
   @override
   void initState() {
@@ -24,9 +26,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
 
   void _formatAmount() {
     String value = _amountController.text.replaceAll(',', '');
-    if (value.isEmpty) {
-      value = '0.00';
-    }
+    if (value.isEmpty) return;  // Do nothing if the input is empty
+
     double amount = double.tryParse(value) ?? 0.0;
     String formattedAmount = amount.toStringAsFixed(2);
 
@@ -49,6 +50,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       context: context,
       builder: (BuildContext context) {
         return CurrencyPicker(
+          selectedCurrency: selectedCurrency,
           onCurrencySelected: (currency) {
             setState(() {
               selectedCurrency = currency;
@@ -70,7 +72,10 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             // Handle back navigation
           },
         ),
-        title: Text('Add money'),
+        title: Text(
+          'Add money',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Container(
         color: Colors.grey[100],
@@ -106,7 +111,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                     controller: _amountController,
                     keyboardType: TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
-                      prefixText: '\$',
+                      hintText: 'Enter amount',  // Show placeholder instead of default value
+                      prefixText: selectedCurrency == 'USDT' ? '\$' : '₦', // Switch prefix based on currency
                       border: InputBorder.none,
                     ),
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -121,8 +127,15 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
-                child: Text('Confirm and pay'),
+                child: Text(
+                  'Confirm and pay',
+                  style: TextStyle(color: Colors.black),
+                ),
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PaymentMethodScreen()),
+                  );
                   // Handle payment confirmation
                 },
                 style: ElevatedButton.styleFrom(
@@ -143,8 +156,9 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
 
 class CurrencyPicker extends StatelessWidget {
   final Function(String) onCurrencySelected;
+  final String selectedCurrency;
 
-  CurrencyPicker({required this.onCurrencySelected});
+  CurrencyPicker({required this.onCurrencySelected, required this.selectedCurrency});
 
   @override
   Widget build(BuildContext context) {
@@ -159,17 +173,18 @@ class CurrencyPicker extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.diamond),
             title: Text('USDT'),
-            trailing: Icon(Icons.radio_button_unchecked),
+            trailing: Icon(selectedCurrency == 'USDT' ? Icons.radio_button_checked : Icons.radio_button_unchecked),
             onTap: () => onCurrencySelected('USDT'),
           ),
           ListTile(
             leading: Text('₦', style: TextStyle(fontSize: 24)),
             title: Text('Naira'),
-            trailing: Icon(Icons.radio_button_checked, color: Colors.amber),
+            trailing: Icon(selectedCurrency == 'Naira' ? Icons.radio_button_checked : Icons.radio_button_unchecked),
             onTap: () => onCurrencySelected('Naira'),
           ),
           TextButton(
-            child: Text('Cancel'),
+            child: Text('Cancel',
+            style: TextStyle(color: Colors.black),),
             onPressed: () => Navigator.pop(context),
           ),
         ],

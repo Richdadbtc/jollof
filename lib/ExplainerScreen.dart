@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'JollofAvatarSelectionScreen.dart';
+import 'WelcomeScreen.dart';
+
 class ExplainerScreen extends StatefulWidget {
   @override
   _ExplainerScreenState createState() => _ExplainerScreenState();
@@ -31,8 +34,11 @@ class _ExplainerScreenState extends State<ExplainerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Explainer'),
+        title: Text('Explainer',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+        backgroundColor: Colors.white,
         centerTitle: true,
       ),
       body: Column(
@@ -61,8 +67,13 @@ class _ExplainerScreenState extends State<ExplainerScreen> {
                   onPressed: () {
                     if (_currentPage < _pages.length - 1) {
                       _pageController.nextPage(
-                        duration: Duration(milliseconds: 300),
+                        duration: Duration(milliseconds: 30),
                         curve: Curves.easeInOut,
+                      );
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => WelcomeScreen(),
+                        ),
                       );
                     }
                   },
@@ -130,7 +141,7 @@ class DotsIndicator extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 4.0),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: position == index ? Colors.amber : Colors.grey,
+            color: position == index ? Colors.amber : Colors.black,
           ),
         );
       }),

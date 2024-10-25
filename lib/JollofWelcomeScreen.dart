@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jollof/CreatePinScreen.dart';
+import 'dart:convert';
+import 'JollofAvatarSelectionScreen.dart';
 
 class JollofWelcomeScreen extends StatefulWidget {
   const JollofWelcomeScreen({Key? key}) : super(key: key);
@@ -85,7 +87,7 @@ class _JollofWelcomeScreenState extends State<JollofWelcomeScreen> {
                     // Pass the selected investment option to the next screen
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => CreatePinScreen(),
+                        builder: (context) => const CreatePinScreen(email: '',),
                       ),
                     );
                     // TODO: Implement continue functionality based on selected option
